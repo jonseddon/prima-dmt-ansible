@@ -1,0 +1,112 @@
+# Deployment-specific settings
+import os
+
+def _getPW():
+    "Return password for db."
+    return open("{{ etc_path }}/{{ db_password_file }}").read().strip()
+
+def _getSK():
+    "Return secret key."
+    return open("{{ etc_path }}/{{ django_key_file }}").read().strip()
+
+BASE_PATH = "%s/.." % os.path.dirname(__file__)
+
+# Set ALLOWED_HOSTS so that site can be served when DEBUG is False
+ALLOWED_HOSTS = ["{{ host_name }}"]
+
+DEBUG = {{ debug_setting }}
+TEMPLATE_DEBUG = DEBUG
+
+FORCE_SCRIPT_NAME = ''
+
+# Enable this feature to configure migration
+# Migration requires extra dependencies: SQLAlchemy
+ENABLE_MIGRATION = False
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', #'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '{{ db_name }}',                         # Or path to database file if using sqlite3.
+        'USER': '{{ db_user }}',                                     # Not used with sqlite3.
+        'PASSWORD': _getPW(),                              # Not used with sqlite3.
+        'HOST': '{{ db_host }}',                     # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '{{ db_port }}',                                     # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = ''
+
+STATIC_ROOT = '{{ static_path }}'
+STATIC_URL = '{{ static_url }}'
+ADMIN_MEDIA_PREFIX = '{{ static_url }}admin/'
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
+
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    '',
+)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = _getSK()
+
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': '{{ log_path }}/{{ log_file }}',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins', 'file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'prima_dm_app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
+

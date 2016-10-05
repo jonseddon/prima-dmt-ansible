@@ -1,0 +1,12 @@
+---
+# The variables file used by the playbooks
+# These don't have to be explicitly imported by vars_files: they are autopopulated
+
+host_ip: DONTKNOW
+host_admin: ag.stephens@stfc.ac.uk
+host_name:  prima-dm.ceda.ac.uk
+
+db_name: ???
+db_user: ???
+db_host: db1.ceda.ac.uk
+db_port: 5432

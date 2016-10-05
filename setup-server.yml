@@ -1,0 +1,9 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: setup server
+  hosts: main-site
+  remote_user: root
+
+  roles:
+    - setup

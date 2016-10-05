@@ -1,0 +1,21 @@
+---
+# Fetch the latest tag from the Github repository
+- name: download the master branch of the app from git
+  git: repo={{ prima_dm_github_url }}
+       dest={{ git_repo_path }}
+
+- name: get new tags from remote
+  shell: git fetch --tags
+  args:
+    chdir: '{{ git_repo_path }}'
+  changed_when: False
+
+- name: get latest tag name
+  shell: git describe --tags `git rev-list --tags --max-count=1`
+  args:
+    chdir: '{{ git_repo_path }}'
+  register: latest_tag
+  changed_when: False
+
+- name: set version as discovered tag
+  set_fact: version={{ latest_tag.stdout }}

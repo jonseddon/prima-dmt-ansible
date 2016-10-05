@@ -1,0 +1,58 @@
+---
+# Variables listed here are applicable to all host groups
+# These don't have to be explicitly imported by vars_files: they are autopopulated
+
+# Name of the package containing the site
+prima_dm_site_name: prima_dm_site
+
+# Location of versioned releases
+project_root_path: '/usr/local/{{ project_name }}'
+deployment_path: '{{ project_root_path }}/current'
+releases_path: '{{ project_root_path }}/releases'
+
+# Location of the virtualenv on the server
+venv_path: '{{ deployment_path }}/pyenv'
+pip_path: '{{ venv_path }}/bin/pip'
+site_packages_path: '{{ venv_path }}/lib/python2.7/site-packages'
+
+# Additional system locations
+etc_root_path: /etc
+etc_path: '{{ etc_root_path }}/{{ project_name }}'
+log_root_path: /var/log
+log_path: '{{ log_root_path }}/{{ project_name }}'
+
+# Extra directories
+project_path: '{{ deployment_path }}/{{ project_name }}'
+static_path: '{{ project_path }}/static'
+
+# Remote files containing sensitive information
+log_file: '{{ project_name }}_django_error.log'
+db_password_file: 'prima_dm_info.txt'
+django_key_file: 'prima_dm_django_key.txt'
+
+# Intermediate temporary locations to store repository data
+dists_path: '{{ project_root_path }}/dists'
+git_path: '{{ deployment_path }}/git'
+git_repo_path: '{{ git_path }}/primavera-dmt'
+
+# Location to retrieve configuration resources
+git_release_site_path: '{{ git_repo_path }}/{{ prima_dm_site_name }}'
+git_release_resource_path: '{{ git_repo_path }}/resources'
+
+# Package names and versions
+
+# Location of the desired version of mod_wsgi
+mod_wsgi_github_url: https://github.com/GrahamDumpleton/mod_wsgi/archive/4.3.0.tar.gz
+
+# Location of the app GitHub repository
+# Requires GitHub account credentials to be set in 'github-credentials.yml'
+prima_dm_package_name: prima-dm-site
+prima_dm_github_url: https://{{ github_username }}:{{ github_password }}@github.com/agstephens/primavera-dmt
+
+# Extra variables
+static_url: prima_dm
+debug_setting: False
+
+# Ansible booleans
+is_server: true
+clean: false

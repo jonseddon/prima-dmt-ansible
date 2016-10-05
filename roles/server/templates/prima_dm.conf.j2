@@ -1,0 +1,35 @@
+# This file goes in the /etc/httpd/conf.d/ directory
+
+<VirtualHost {{ host_ip }}:80>
+    ServerAdmin {{ host_admin }}
+    ServerName {{ host_name }}
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    ErrorLog {{ log_path }}/{{ project_name }}_error.log
+    CustomLog {{ log_path }}/{{ project_name }}_access.log combined
+
+    Alias /static {{ static_path }}
+
+    WSGIDaemonProcess  threads=5  python-path={{ venv_path }}/lib/python2.7/site-packages
+    WSGIApplicationGroup %{GLOBAL}
+
+    SetEnv DJANGO_SETTINGS_MODULE {{ prima_dm_site_name }}.settings
+
+    <Directory {{ static_path }}>
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # Allow admin access from RAL and Met Office
+    <location /admin>
+        order allow,deny
+        allow from .rl.ac.uk
+        allow from 130.246.
+    </location>     
+
+    WSGIScriptAlias / {{ venv_path }}/bin/wsgi.py
+
+</VirtualHost>

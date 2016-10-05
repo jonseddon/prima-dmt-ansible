@@ -1,0 +1,4 @@
+---
+# Controller for the tasks in this role.
+
+- include: configure-server.yml

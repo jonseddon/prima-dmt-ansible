@@ -1,0 +1,66 @@
+---
+# Create project directory
+
+- name: make project directory within venv directory
+  file: path={{ project_path }} state=directory
+
+- name: copy manage.py to final VE
+  copy: src={{ git_repo_path }}/manage.py dest={{ project_path }}/manage.py
+        remote_src=yes mode=0755
+
+# Edit Django configuration files
+
+# settings_local.py
+- name: update content of settings_local.py
+  template: src=settings_local.py.j2 dest={{ git_release_site_path }}/settings_local.py
+
+# wsgi.py
+- name: update content of wsgi file
+  template: src=wsgi.py.j2 dest={{ venv_path }}/bin/wsgi.py
+
+# Create etc files
+
+- name: make etc directory
+  file: path={{ etc_path }} state=directory
+
+- name: create SECRET_KEY for django app and store in {{ etc_path }}/{{ django_key_file }}
+  shell: dd if=/dev/urandom bs=124 count=1 2>/dev/null | sha256sum | cut -c1-54 > {{ etc_path }}/{{ django_key_file }}
+  args:
+    chdir: '{{ etc_path }}'
+    creates: '{{ django_key_file }}'
+
+- name: check that {{ etc_path }}/{{ db_password_file }} exists (where we keep postgres p/w)
+  file: path={{ etc_path }}/{{ db_password_file }} state=touch
+  changed_when: False
+
+# Create log files
+
+- name: make log directory
+  file: path={{ log_path }} state=directory
+
+- name: check that log file exists
+  file: path={{ log_path }}/{{ log_file }} state=touch
+  changed_when: False
+
+# Copy and configure the contents of the tools directory
+
+- name: copy tools directory from site packages to the deployment directory
+  command: 'cp -r {{ git_repo_path }}/tools {{ project_path }}'
+  changed_when: False
+
+- name: set server name in check_web_views.py script
+  replace: dest='{{ project_path }}/tools/deploy_tools/check_web_views.py'
+           regexp='HOST_NAME' replace={{ host_name }}
+  changed_when: False
+
+# Install the app
+
+- name: uninstall the app if changes were detected
+  pip: virtualenv={{ venv_path }}
+       name={{ prima_dm_package_name }} state=absent
+  when: fetch_result.changed
+
+- name: install the app into our site-packages
+  pip: virtualenv={{ venv_path }}
+       name={{ git_repo_path }}
+  notify: restart httpd

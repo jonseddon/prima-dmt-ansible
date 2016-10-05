@@ -1,0 +1,36 @@
+---
+# Install Django and the application
+- name: install git client
+  yum: name=git
+
+- name: find the latest tag name from git
+  include: find-latest-tag.yml
+  when: version is undefined
+
+- name: remove the previous deployment for version and start from scratch
+  file: path={{ releases_path }}/{{ version }} state=absent
+  when: clean
+
+- name: create installation directory with version name
+  file: path={{ releases_path }}/{{ version }} state=directory
+
+- name: create symlink to the installation directory
+  file: src={{ releases_path }}/{{ version }} dest={{ deployment_path }} state=link
+  notify: restart httpd
+
+- name: create dists directory
+  file: path={{ dists_path }} state=directory
+
+- name: fetch specified version of the app from git
+  git: repo={{ prima_dm_github_url }}
+       dest={{ git_repo_path }}
+       version={{ version }}
+  register: fetch_result
+
+- name: update setuptools before main pip installation as required
+  pip: virtualenv={{ venv_path }}
+       name=setuptools virtualenv_site_packages=yes state=present version=23.0.0
+
+- name: install dependencies of the app from requirements.txt file
+  pip: virtualenv={{ venv_path }}
+       requirements={{ git_repo_path }}/requirements.txt

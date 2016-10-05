@@ -1,0 +1,31 @@
+---
+# Install and start apache
+
+- name: install gcc compiler
+  yum: name=gcc state=present
+
+- name: install httpd
+  yum: name=httpd state=present
+
+- name: install httpd-devel for apxs command needed by mod_wsgi configure process
+  yum: name=httpd-devel state=present
+
+- name: install python2.7 - needed for mod_wsgi (python.h file)
+  yum: name=python27 state=present
+
+- name: download mod_wsgi to build locally
+  get_url: url={{ mod_wsgi_github_url }} dest=/usr/local/src/4.3.0.tar.gz validate_certs=no
+
+- name: unpack mod_wsgi tar file
+  command: tar -xvzf /usr/local/src/4.3.0.tar.gz
+  args:
+    chdir: /usr/local/src
+
+- name: configure the mod_wsgi apache module
+  command: ./configure --with-python=/usr/bin/python2.7 chdir=/usr/local/src/mod_wsgi-4.3.0
+  
+- name: make and install mod_wsgi apache module
+  command: make install chdir=/usr/local/src/mod_wsgi-4.3.0
+
+- name: write LoadModule file for mod_wsgi
+  shell: echo "LoadModule wsgi_module modules/mod_wsgi.so" > /etc/httpd/conf.d/mod_wsgi.conf

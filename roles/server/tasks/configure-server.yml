@@ -1,0 +1,23 @@
+---
+# Configure the web application
+
+# prima_dm.conf
+- name: update content of app apache config file
+  template: src=prima_dm.conf.j2 dest=/etc/httpd/conf.d/prima_dm.conf
+  notify: restart httpd
+
+# Create log files
+
+- name: create django file and set ownership to apache
+  file: path={{ log_path }}/{{ log_file }} state=touch owner=apache group=root mode=0666
+  changed_when: False
+
+# Collect static files from apps into static directory
+
+- name: collect static files in django
+  django_manage:
+    command=collectstatic
+    app_path={{ project_path }}
+    settings={{ prima_dm_site_name }}.settings
+    virtualenv={{ venv_path }}
+  changed_when: False

@@ -1,0 +1,5 @@
+---
+# Controller for the tasks in this role.
+
+- include: setup-virtualenv.yml
+- include: configure-app.yml

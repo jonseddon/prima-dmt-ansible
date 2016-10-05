@@ -1,0 +1,6 @@
+---
+# Controller for the tasks in this role.
+
+- include: install-apache.yml 
+- include: install-postgres-tools.yml
+- include: install-python.yml

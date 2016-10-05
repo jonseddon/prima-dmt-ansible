@@ -1,0 +1,26 @@
+---
+# Install postgres tools
+
+- name: install postgresql client tools
+  yum: name=postgresql state=present
+
+- name: install postgresql-devel 
+  yum: name=postgresql-devel state=present
+
+- name: install gcc - required to build pyscopg2
+  yum: name=gcc state=present
+
+- name: install openssl-devel - required for crypto-cookie
+  yum: name=openssl-devel state=present
+
+- name: install setuptools - needed for pip
+  yum: name=python27-setuptools state=present
+
+- name: install pip - needed for psycopg2
+  easy_install: name=pip executable=/usr/bin/easy_install-2.7
+
+- name: install psycopg2
+  pip: name=psycopg2 executable=/usr/bin/pip2.7
+
+- name: install sqlalchemy
+  pip: name=sqlalchemy executable=/usr/bin/pip2.7
