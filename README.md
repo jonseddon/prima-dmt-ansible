@@ -26,7 +26,7 @@ The typical usage for updating the service is:
 
 5. Run the primary playbook:
 
-    `ansible-playbook deploy-dmt.yml`
+    `ansible-playbook deploy-dmt.yml --ask-vault-pass`
 
 If you do not wish to set an environment variable, the inventory file can be specified dynamically:
 
@@ -46,9 +46,10 @@ Any variables specified within extra-vars will have precedence over variables fo
 
 ## Sensitive information - not in GIT
 
-Please note that you will need to update and rename the `github-credentials.yml.tmpl`
-file and replace the `__GIT_USER__` and `__GIT_PASSWORD__` tokens with your
-real GitHub credentials.
+I couldn't get Git to work with a username and password. Instead I've created an extra SSH key
+and uploaded the public key to Github. I have then added the private key to `ansible vault`:
+
+    ansible-vault encrypt /path/to/local/private_key
 
 ## Important - you can wipe out the production service!
 

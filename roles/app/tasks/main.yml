@@ -1,5 +1,6 @@
 ---
 # Controller for the tasks in this role.
 
+- include: copy-git-key.yml
 - include: setup-virtualenv.yml
 - include: configure-app.yml

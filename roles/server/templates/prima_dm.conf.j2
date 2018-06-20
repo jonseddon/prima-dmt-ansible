@@ -1,8 +1,10 @@
 # This file goes in the /etc/httpd/conf.d/ directory
+LoadModule wsgi_module modules/mod_wsgi.so
+WSGISocketPrefix /var/run/wsgi
 
-<VirtualHost {{ host_ip }}:80>
+<VirtualHost {{ virtual_ip }}:80>
     ServerAdmin {{ host_admin }}
-    ServerName {{ host_name }}
+    ServerName {{ host_ip }}
 
     # Possible values include: debug, info, notice, warn, error, crit,
     # alert, emerg.

@@ -44,14 +44,14 @@
 
 # Copy and configure the contents of the tools directory
 
-- name: copy tools directory from site packages to the deployment directory
-  command: 'cp -r {{ git_repo_path }}/tools {{ project_path }}'
-  changed_when: False
+#- name: copy tools directory from site packages to the deployment directory
+#  command: 'cp -r {{ git_repo_path }}/tools {{ project_path }}'
+#  changed_when: False
 
-- name: set server name in check_web_views.py script
-  replace: dest='{{ project_path }}/tools/deploy_tools/check_web_views.py'
-           regexp='HOST_NAME' replace={{ host_name }}
-  changed_when: False
+#- name: set server name in check_web_views.py script
+#  replace: dest='{{ project_path }}/tools/deploy_tools/check_web_views.py'
+#           regexp='HOST_NAME' replace={{ host_name }}
+#  changed_when: False
 
 # Install the app
 
