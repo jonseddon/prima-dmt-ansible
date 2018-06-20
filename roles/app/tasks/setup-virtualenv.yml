@@ -25,6 +25,7 @@
   git: repo={{ prima_dm_github_url }}
        dest={{ git_repo_path }}
        version={{ version }}
+       key_file={{ dest_key }}
   register: fetch_result
 
 - name: update setuptools before main pip installation as required

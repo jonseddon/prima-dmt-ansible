@@ -2,12 +2,11 @@
 # This playbook deploys the whole application stack in this site.  
 
 - name: deploy to dmt server
-  hosts: main-site
-  remote_user: root
+  hosts: test-site
+  remote_user: jseddon
 
   vars_files:
     - vars/prima-dm-site
-    - github-credentials.yml
 
   roles:
     - app

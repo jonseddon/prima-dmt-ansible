@@ -3,7 +3,7 @@
 # These don't have to be explicitly imported by vars_files: they are autopopulated
 
 # Name of the package containing the site
-prima_dm_site_name: prima_dm_site
+prima_dm_site_name: pdata_site
 
 # Location of versioned releases
 project_root_path: '/usr/local/{{ project_name }}'
@@ -45,9 +45,8 @@ git_release_resource_path: '{{ git_repo_path }}/resources'
 mod_wsgi_github_url: https://github.com/GrahamDumpleton/mod_wsgi/archive/4.3.0.tar.gz
 
 # Location of the app GitHub repository
-# Requires GitHub account credentials to be set in 'github-credentials.yml'
 prima_dm_package_name: prima-dm-site
-prima_dm_github_url: https://{{ github_username }}:{{ github_password }}@github.com/agstephens/primavera-dmt
+prima_dm_github_url: git@github.com:agstephens/primavera-dmt
 
 # Extra variables
 static_url: prima_dm
@@ -56,3 +55,10 @@ debug_setting: False
 # Ansible booleans
 is_server: true
 clean: false
+
+# Run using sudo
+ansible_become: yes
+
+# Set-up a private key for Git
+source_key: /home/h04/jseddon/.ssh/id_rsa_ansible
+dest_key: /root/.ssh/id_rsa_ansible

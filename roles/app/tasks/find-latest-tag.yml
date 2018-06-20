@@ -3,15 +3,16 @@
 - name: download the master branch of the app from git
   git: repo={{ prima_dm_github_url }}
        dest={{ git_repo_path }}
+       key_file={{ dest_key }}
 
 - name: get new tags from remote
-  shell: git fetch --tags
+  shell: ssh-agent bash -c 'ssh-add {{ dest_key }}; git fetch --tags'
   args:
     chdir: '{{ git_repo_path }}'
   changed_when: False
 
 - name: get latest tag name
-  shell: git describe --tags `git rev-list --tags --max-count=1`
+  shell: ssh-agent bash -c 'ssh-add {{ dest_key }}; git describe --tags `git rev-list --tags --max-count=1`'
   args:
     chdir: '{{ git_repo_path }}'
   register: latest_tag

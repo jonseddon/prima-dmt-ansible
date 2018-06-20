@@ -9,10 +9,10 @@ def _getSK():
     "Return secret key."
     return open("{{ etc_path }}/{{ django_key_file }}").read().strip()
 
-BASE_PATH = "%s/.." % os.path.dirname(__file__)
+BASE_DIR = "%s/.." % os.path.dirname(__file__)
 
 # Set ALLOWED_HOSTS so that site can be served when DEBUG is False
-ALLOWED_HOSTS = ["{{ host_name }}"]
+ALLOWED_HOSTS = ["{{ host_ip }}"]
 
 DEBUG = {{ debug_setting }}
 TEMPLATE_DEBUG = DEBUG

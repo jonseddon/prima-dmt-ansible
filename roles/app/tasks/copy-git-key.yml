@@ -1,0 +1,15 @@
+---
+# Copy git private key from ansible vault
+
+- name: Ensure .ssh directory exists.
+  file:
+    dest: "{{ dest_key | dirname }}"
+    mode: 0700
+    owner: root
+    state: directory
+- name: Install ssh key
+  copy:
+    src: "{{ source_key }}"
+    dest: "{{ dest_key }}"
+    mode: 0600
+    owner: root
